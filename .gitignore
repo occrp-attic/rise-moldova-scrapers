@@ -1,5 +1,5 @@
 .idea/
-rise_scrapping_api/settings.py
+rise_scrapping_api/rise_scrapping_api/settings.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
