@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 def spider_web(max_pages):
     page = 0
     links = []
+    true_links = []
     while page <= max_pages:
         url = "http://tender.gov.md/ro/operatorii-economici-calificati?page=%s"
         url = url % page
@@ -22,15 +23,49 @@ def spider_web(max_pages):
 
         page += 1
     #print(links)
-    result = "\s".join(links)
+    for items in links:
+        if items.startswith("http://tender.gov.md/ro/content/"):
+            true_links.append(items)
+    #print(true_links)
+    for urls in true_links:
+        source_code = requests.get(urls)
+        source_text = source_code.text
+        soup = BeautifulSoup(source_text)
+        for title in soup.findAll('h1', {'id': 'page-title'}):
+            print(str(title.string).encode())
+        for small_part in soup.findAll('div', {'class': "field field-name-field-adresa-juridic-rela-ii-de- field-type-"\
+                                                            "text-long field-label-above"}):
+            soup1 = BeautifulSoup(str(small_part))
+            for child in soup1.strings:
+                print(child)
 
-    regex = "(http://tender.gov.md/ro/content/[a-z,0-9]{2,})"
-    patten = re.compile(regex)
-    true_links = re.findall(patten, result)
-    print(true_links)
+
+'''
+            soup1 = BeautifulSoup(str(small_part))
+            #print(str(soup1.contents).encode())
+            for div1 in soup1.findAll('div', {'class': "field-items"}):
+                soup2 = BeautifulSoup(str(div1))
+                for div2 in soup2.findAll('div', {'class': 'field-item even'}):
+                    soup3 = BeautifulSoup(str(div2))
+                    for info in soup3.findAll('p'):
+                        if isinstance(info, str):
+                            print(str(info.string).encode())
+                        else:
+                            soup4 = BeautifulSoup(str(info))
+                            for span in soup4.findAll('span'):
+                                print(str(span.string).encode())
 
 
-spider_web(6)
+'''
+
+
+
+
+
+
+spider_web(0)
+
+
 
 #def get_urls():
 
@@ -56,13 +91,6 @@ while len(urls) > 0:
             visited.append(tag['href'])
 
 print(visited)
-
-regex = "(http://tender.gov.md/ro/content/[a-z,0-9]{2,})"
-patten = re.compile(regex)
-true_links = re.findall(patten, visited)
-print(true_links)
-
-
 
 
 
