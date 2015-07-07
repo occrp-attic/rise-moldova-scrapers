@@ -5,8 +5,38 @@ import urllib.parse
 import urllib.request
 from bs4 import BeautifulSoup
 
-url = "http://tender.gov.md/ro/operatorii-economici-calificati?title=&field_indp_idno_value=&field_forma_organizatorico_"\
-      "jurid_tid=All&field_genurile_de_activitate_des_value="
+#url = "http://tender.gov.md/ro/operatorii-economici-calificati?page=%s"
+
+def spider_web(max_pages):
+    page = 0
+    links = []
+    while page <= max_pages:
+        url = "http://tender.gov.md/ro/operatorii-economici-calificati?page=%s"
+        url = url % page
+        source_code = requests.get(url)
+        plain_text = source_code.text
+        soup = BeautifulSoup(plain_text)
+        for link in soup.findAll('a', href=True):
+            href = "http://tender.gov.md" + link.get('href')
+            links.append(href)
+
+        page += 1
+    #print(links)
+    result = "\s".join(links)
+
+    regex = "(http://tender.gov.md/ro/content/[a-z,0-9]{2,})"
+    patten = re.compile(regex)
+    true_links = re.findall(patten, result)
+    print(true_links)
+
+
+spider_web(6)
+
+#def get_urls():
+
+
+
+'''
 urls = [url]
 visited = [url]
 while len(urls) > 0:
@@ -35,7 +65,7 @@ print(true_links)
 
 
 
-'''
+
 for url in visited:
         source_code = requests.get(url)
         source_text = source_code.text
@@ -52,4 +82,4 @@ for url in visited:
             fw = open('Ip_list.txt', 'a')
             fw.write("%s\n" % item)
             fw.close()
-            '''
+'''
