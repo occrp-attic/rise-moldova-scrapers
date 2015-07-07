@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 .idea/
+rise_scrapping_api/rise_scrapping_api/settings.py
 
-*.pyc
-
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
