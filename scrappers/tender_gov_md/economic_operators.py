@@ -1,4 +1,4 @@
-import re
+import json
 import requests
 import urllib
 import urllib.parse
@@ -11,6 +11,8 @@ def spider_web(max_pages):
     page = 0
     links = []
     true_links = []
+    dict = {'Name': '', 'Form_organiz': '', 'Address': '', 'Description': '', 'Idno': '', 'Nr_atrib': ''}
+    list_of_dict = []
     while page <= max_pages:
         url = "http://tender.gov.md/ro/operatorii-economici-calificati?page=%s"
         url = url % page
@@ -32,38 +34,56 @@ def spider_web(max_pages):
         source_text = source_code.text
         soup = BeautifulSoup(source_text)
         for title in soup.findAll('h1', {'id': 'page-title'}):
-            print(str(title.string).encode())
-        for small_part in soup.findAll('div', {'class': "field field-name-field-adresa-juridic-rela-ii-de- field-type-"\
-                                                            "text-long field-label-above"}):
-            soup1 = BeautifulSoup(str(small_part))
-            for child in soup1.strings:
-                print(child)
+            #print(str(title.string).encode())
+            dict['Name'] = str(title.string).encode()
+        for addres in soup.findAll('div', {'class': 'field field-name-field-adresa-juridic-rela-ii-de- field-type-text-'\
+        'long field-label-above'}):
+            soup1 = BeautifulSoup(str(addres))
+            for sexting in soup1.findAll('div', {'class': 'field-items'}):
+                soup2 = BeautifulSoup(str(sexting))
+                html_text = soup2.get_text()
+                #print(html_text.encode())
+                dict['Address'] = html_text.encode()
+        for description in soup.findAll('div', {'class': 'field field-name-field-genurile-de-activitate-des field-type-'\
+                                                             'text-with-summary field-label-above'}):
+            soup3 = BeautifulSoup(str(description))
+            for final_string in soup3.findAll('div', {'class': 'field-items'}):
+                soup4 = BeautifulSoup(str(final_string))
+                last = soup4.get_text()
+                #print(last.encode())
+                dict['Description'] = str(last).encode()
+        for idno in soup.findAll('div', {'class': 'field field-name-field-indp-idno field-type-text field-label-inline clearfix'}):
+            soup6 = BeautifulSoup(str(idno))
+            for idno2 in soup6.findAll('div', {'class': 'field-items'}):
+                soup7 = BeautifulSoup(str(idno2))
+                idno_text = soup7.get_text()
+                #print(idno_text.encode())
+                dict['Idno'] = str(idno_text).encode()
+        for form_organ in soup.findAll('div', {'class': 'field field-name-field-forma-organizatorico-jurid field-type-'\
+                                                        'taxonomy-term-reference field-label-inline clearfix'}):
+            form_organ1 = BeautifulSoup(str(form_organ))
+            for form_organ2 in form_organ1.findAll('div', {'class': 'field-items'}):
+                form_organ3 = BeautifulSoup(str(form_organ2))
+                form_organ4 = form_organ3.get_text()
+                #print(form_organ4.encode())
+                dict['Form_organiz'] = str(form_organ4).encode()
+        for nr_atribution in soup.findAll('div', {'class': 'field field-name-field-nr-atribuit-nr-deciziei-ag field-'\
+                                                           'type-text field-label-inline clearfix'}):
+            nr_atribution1 = BeautifulSoup(str(nr_atribution))
+            for nr_atribution2 in nr_atribution1.findAll('div', {'class': 'field-items'}):
+                nr_atribution3 = BeautifulSoup(str(nr_atribution2))
+                nr_atribution4 = nr_atribution3.get_text()
+                #print(nr_atribution4.encode())
+                dict['Nr_atrib'] = str(nr_atribution4).encode()
+        list_of_dict.append(dict)
+    return json.dumps(list_of_dict)
 
 
-'''
-            soup1 = BeautifulSoup(str(small_part))
-            #print(str(soup1.contents).encode())
-            for div1 in soup1.findAll('div', {'class': "field-items"}):
-                soup2 = BeautifulSoup(str(div1))
-                for div2 in soup2.findAll('div', {'class': 'field-item even'}):
-                    soup3 = BeautifulSoup(str(div2))
-                    for info in soup3.findAll('p'):
-                        if isinstance(info, str):
-                            print(str(info.string).encode())
-                        else:
-                            soup4 = BeautifulSoup(str(info))
-                            for span in soup4.findAll('span'):
-                                print(str(span.string).encode())
 
 
-'''
-
-
-
-
-
-
-spider_web(0)
+#spider_web(6)
+with open('eo.json', 'w') as eo:
+    eo.write(spider_web(6))
 
 
 
