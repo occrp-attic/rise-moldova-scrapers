@@ -35,7 +35,7 @@ def spider_web(max_pages):
         soup = BeautifulSoup(source_text)
         for title in soup.findAll('h1', {'id': 'page-title'}):
             #print(str(title.string).encode())
-            dict['Name'] = str(title.string).encode()
+            dict['Name'] = title.string
         for addres in soup.findAll('div', {'class': 'field field-name-field-adresa-juridic-rela-ii-de- field-type-text-'\
         'long field-label-above'}):
             soup1 = BeautifulSoup(str(addres))
@@ -43,7 +43,7 @@ def spider_web(max_pages):
                 soup2 = BeautifulSoup(str(sexting))
                 html_text = soup2.get_text()
                 #print(html_text.encode())
-                dict['Address'] = html_text.encode()
+                dict['Address'] = html_text
         for description in soup.findAll('div', {'class': 'field field-name-field-genurile-de-activitate-des field-type-'\
                                                              'text-with-summary field-label-above'}):
             soup3 = BeautifulSoup(str(description))
@@ -51,37 +51,38 @@ def spider_web(max_pages):
                 soup4 = BeautifulSoup(str(final_string))
                 last = soup4.get_text()
                 #print(last.encode())
-                dict['Description'] = str(last).encode()
+                dict['Description'] = last
         for idno in soup.findAll('div', {'class': 'field field-name-field-indp-idno field-type-text field-label-inline clearfix'}):
             soup6 = BeautifulSoup(str(idno))
             for idno2 in soup6.findAll('div', {'class': 'field-items'}):
                 soup7 = BeautifulSoup(str(idno2))
                 idno_text = soup7.get_text()
-                #print(idno_text.encode())
-                dict['Idno'] = str(idno_text).encode()
+                # print(idno_text.encode())
+                dict['Idno'] = idno_text
         for form_organ in soup.findAll('div', {'class': 'field field-name-field-forma-organizatorico-jurid field-type-'\
                                                         'taxonomy-term-reference field-label-inline clearfix'}):
             form_organ1 = BeautifulSoup(str(form_organ))
             for form_organ2 in form_organ1.findAll('div', {'class': 'field-items'}):
                 form_organ3 = BeautifulSoup(str(form_organ2))
                 form_organ4 = form_organ3.get_text()
-                #print(form_organ4.encode())
-                dict['Form_organiz'] = str(form_organ4).encode()
+                # print(form_organ4.encode())
+                dict['Form_organiz'] = form_organ4
         for nr_atribution in soup.findAll('div', {'class': 'field field-name-field-nr-atribuit-nr-deciziei-ag field-'\
                                                            'type-text field-label-inline clearfix'}):
             nr_atribution1 = BeautifulSoup(str(nr_atribution))
             for nr_atribution2 in nr_atribution1.findAll('div', {'class': 'field-items'}):
                 nr_atribution3 = BeautifulSoup(str(nr_atribution2))
                 nr_atribution4 = nr_atribution3.get_text()
-                #print(nr_atribution4.encode())
-                dict['Nr_atrib'] = str(nr_atribution4).encode()
+                # print(nr_atribution4.encode())
+                dict['Nr_atrib'] = nr_atribution4
         list_of_dict.append(dict)
+        dict = {}
+        #print(list_of_dict)
     return json.dumps(list_of_dict)
 
 
 
-
-#spider_web(6)
+#spider_web(0)
 with open('eo.json', 'w') as eo:
     eo.write(spider_web(6))
 
