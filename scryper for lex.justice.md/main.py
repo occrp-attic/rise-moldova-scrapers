@@ -48,10 +48,10 @@ def spider_web(max_pages):
             s = all_text.replace('\\xa0', "")
             s.encode()
             #print(s.encode())
-            file = [{'number': number1, "title": all_header2, "body": s}]
+            file = [{'number': numbers1, "title": all_header2, "body": s}]
             file1.append(file)
             #print (file)
     return json.dumps(file1)
 
 with open('eo.json', 'w') as eo:
-    eo.write(spider_web(2))
+    eo.write(spider_web(1))
