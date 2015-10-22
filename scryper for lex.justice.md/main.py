@@ -1,3 +1,4 @@
+# coding: utf-8
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -42,11 +43,11 @@ def spider_web(max_pages):
         all_header = number1.findAll('span', {'class': 'doc_header'})
         all_header1 = BeautifulSoup(str(all_header))
         all_header2 = all_header1.get_text(separator=' ', strip=True)
-        #print(.encode())
+        print(all_header2.encode())
         for allla in text.findAll('td', {'class': 'noborder'})[7:]:
             all_text = allla.get_text(separator=' ', strip=True)
             s = all_text.replace('\\xa0', "")
-            s.encode()
+            #s.encode()
             #print(s.encode())
             file = [{'number': numbers1, "title": all_header2, "body": s}]
             file1.append(file)
